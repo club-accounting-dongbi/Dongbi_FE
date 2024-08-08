@@ -28,6 +28,8 @@ export default function Home() {
         <h1>Common InputText</h1>
         <InputText
           type="text"
+          id="email"
+          value="email"
           variant={'orange'}
           shadow={'lg'}
           label="이메일"
@@ -35,6 +37,8 @@ export default function Home() {
         />
         <InputText
           type="text"
+          id="id"
+          value="id"
           variant={'default'}
           shadow={'default'}
           label="아이디 입력"
