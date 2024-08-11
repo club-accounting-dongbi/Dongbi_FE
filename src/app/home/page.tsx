@@ -23,6 +23,7 @@ const Home = () => {
         <CommonModal
           setToggle={setAddModalToggle}
           goBack={false}
+          close={true}
           content={<PlusModalRouter setAddModalToggle={setAddModalToggle} />}
         />
       )}
@@ -30,6 +31,7 @@ const Home = () => {
         <CommonModal
           setToggle={setMinusModalToggle}
           goBack={false}
+          close={true}
           content={<MinusModalRouter />}
         />
       )}
