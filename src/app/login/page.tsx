@@ -4,8 +4,8 @@ import React, { useState } from 'react';
 import Logo from '@/public/icon/icon_logo.svg';
 import coins from '@/public/icon/icon_coins.svg';
 import InputText from '@/src/components/common/InputText';
-import Email from '@/src/app/shared/components/IconComponents/IconEmail';
-import Pwd from '@/src/app/shared/components/IconComponents/IconPwd';
+import Email from '@/src/components/IconComponents/IconEmail';
+import Pwd from '@/src/components/IconComponents/IconPwd';
 import Link from 'next/link';
 import CommonButton from '@/src/components/common/CommonButton';
 
