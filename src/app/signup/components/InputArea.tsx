@@ -1,123 +1,99 @@
 'use client';
 
 import React from 'react';
-import { UseFormRegister, FieldErrors } from 'react-hook-form';
-import Image from 'next/image';
-
 import IconUsers from '../../../components/IconComponents/IconUsers';
-import EmailIcon from '@/public/icon/icon_email.svg';
-import PasswordIcon from '@/public/icon/icon_pwd_gray.svg';
+import IconEmail from '../../../components/IconComponents/IconEmail';
+import IconPwd from '../../../components/IconComponents/IconPwd';
 import InputText from '@/src/components/common/InputText';
+import { SignupData } from '@/src/api/auth/signup';
 
 interface InputAreaProps {
-  register: UseFormRegister<any>;
-  errors: FieldErrors<any>;
+  data: SignupData;
+  setData: React.Dispatch<React.SetStateAction<SignupData>>;
 }
 
-const InputArea = ({ register, errors }: InputAreaProps) => {
+const EmailInputRow = 'relative w-[331px] h-[58px]';
+const VerifyButton =
+  'absolute right-[10px] top-[12px] mt-[13px] text-13 text-custom-gray-3 z-50';
+const InputArea = ({ data, setData }: InputAreaProps) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setData((prev) => ({ ...prev, [name]: value }));
+  };
   return (
     <>
       <InputText
         type="text"
         id="clubName"
+        name="clubname" // name 속성 추가
         variant="orange"
         shadow="lg"
         label="동아리 이름"
         icon={
           <IconUsers className="icon w-[24px] h-[24px] fill-none text-custom-gray-5 group-hover:text-black" />
         }
-        additionalClass="w-[331px] h-[45px] mt-[13px]"
-        {...register('clubName', { required: '동아리 이름을 확인해주세요' })}
+        additionalClass="w-[331px] h-[45px] mt-[13px] flex gap-2"
+        onChange={handleChange}
       />
-      {errors.clubName && (
-        <span className="w-[331px] text-red-500 text-sm mt-[4px]">
-          {typeof errors.clubName.message === 'string'
-            ? errors.clubName.message
-            : '잘못된 입력입니다.'}
-        </span>
-      )}
 
-      <InputText
-        type="text"
-        id="email"
-        variant="orange"
-        shadow="lg"
-        label="이메일"
-        icon={<Image src={EmailIcon} width={24} height={24} alt="email" />}
-        additionalClass="w-[331px] h-[45px] mt-[13px]"
-        {...register('email', {
-          required: '이메일을 확인해주세요',
-          pattern: {
-            value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-            message: '유효한 이메일을 확인해주세요',
-          },
-        })}
-      />
-      {errors.email && (
-        <span className="w-[331px] text-red-500 text-sm mt-[4px]">
-          {typeof errors.email.message === 'string'
-            ? errors.email.message
-            : '잘못된 입력입니다.'}
-        </span>
-      )}
-
+      <div className={EmailInputRow}>
+        <InputText
+          type="text"
+          id="email"
+          name="email" // name 속성 추가
+          variant="orange"
+          shadow="lg"
+          label="이메일"
+          icon={
+            <IconEmail className="icon w-[24px] h-[24px] fill-none text-custom-gray-5 group-hover:text-black" />
+          }
+          additionalClass="w-[331px] h-[45px] mt-[13px] flex gap-2"
+          onChange={handleChange}
+        />
+        <button className={VerifyButton}>인증</button>
+      </div>
       <InputText
         type="text"
         id="verifyNumber"
+        name="verifyNumber" // name 속성 추가
         variant="orange"
         shadow="lg"
         label="인증번호"
-        icon={<Image src={EmailIcon} width={24} height={24} alt="email" />}
-        additionalClass="w-[331px] h-[45px] mt-[13px]"
-        {...register('verifyNumber', { required: '인증번호를 확인해주세요' })}
+        icon={
+          <IconEmail className="icon w-[24px] h-[24px] fill-none text-custom-gray-5 group-hover:text-black" />
+        }
+        additionalClass="w-[331px] h-[45px] mt-[13px] flex gap-2"
+        onChange={handleChange}
       />
-      {errors.verifyNumber && (
-        <span className="w-[331px] text-red-500 text-sm mt-[4px]">
-          {typeof errors.verifyNumber.message === 'string'
-            ? errors.verifyNumber.message
-            : '잘못된 입력입니다.'}
-        </span>
-      )}
 
       <InputText
         type="password"
         id="password"
+        name="password" // name 속성 추가
         variant="orange"
         shadow="lg"
-        label="비밀번호"
+        label="비밀번호(영문, 숫자, 특수문자 혼합 8~20자)"
         icon={
-          <Image src={PasswordIcon} width={24} height={24} alt="password" />
+          <IconPwd className="icon w-[24px] h-[24px] fill-none text-custom-gray-5 group-hover:text-black" />
         }
-        additionalClass="w-[331px] h-[45px] mt-[13px]"
-        {...register('password', { required: '비밀번호를 확인해주세요' })}
+        inputStyle="w-[300px]"
+        additionalClass="w-[331px] h-[45px] mt-[13px] flex gap-2"
+        onChange={handleChange}
       />
-      {errors.password && (
-        <span className="w-[331px] text-red-500 text-sm mt-[4px]">
-          {typeof errors.password.message === 'string'
-            ? errors.password.message
-            : '잘못된 입력입니다.'}
-        </span>
-      )}
 
       <InputText
         type="password"
         id="password2"
+        name="password2" // name 속성 추가
         variant="orange"
         shadow="lg"
         label="비밀번호 확인"
         icon={
-          <Image src={PasswordIcon} width={24} height={24} alt="password" />
+          <IconPwd className="icon w-[24px] h-[24px] fill-none text-custom-gray-5 group-hover:text-black" />
         }
-        additionalClass="w-[331px] h-[45px] mt-[13px]"
-        {...register('password2', { required: '비밀번호를 다시 확인해주세요' })}
+        additionalClass="w-[331px] h-[45px] mt-[13px] flex gap-2"
+        onChange={handleChange}
       />
-      {errors.password2 && (
-        <span className="w-[331px] text-red-500 text-sm mt-[4px]">
-          {typeof errors.password2.message === 'string'
-            ? errors.password2.message
-            : '잘못된 입력입니다.'}
-        </span>
-      )}
     </>
   );
 };
