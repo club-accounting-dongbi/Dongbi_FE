@@ -21,6 +21,7 @@ const config: Config = {
         'custom-shadow-light': '#FFF7E0',
         'custom-gray': '#8E8E93',
         'custom-gray-2': '#AEAEB2',
+        'custom-gray-3': '#C7C7CC',
         'custom-gray-4': '#D1D1D6',
         'custom-gray-5': '#E5E5EA',
         'custom-gray-6': '#F2F2F7',
@@ -28,6 +29,7 @@ const config: Config = {
       fontSize: {
         11: '11px',
         12: '12px',
+        13: '13px',
         14: '14px',
         15: '15px',
         16: '16px',

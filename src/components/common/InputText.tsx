@@ -11,6 +11,7 @@ interface InputProps {
   additionalClass?: string;
   type: string;
   id: string;
+  name?: string;
   value?: any;
   disable?: boolean;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -47,6 +48,7 @@ const InputText = ({
   icon,
   additionalClass,
   id,
+  name,
   value,
   disable = false,
   onChange,
@@ -59,6 +61,7 @@ const InputText = ({
         type={type}
         placeholder={label}
         id={id}
+        name={name}
         value={value}
         className={
           disable

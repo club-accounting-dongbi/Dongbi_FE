@@ -11,7 +11,7 @@ interface CommonButtonProps {
   borderColor?: 'lightBorder' | null | undefined;
   fontSize: 'sm' | 'lg';
   additionalClass?: string;
-  onClickEvent?: React.MouseEventHandler<HTMLButtonElement>; // onClick 타입
+  onClickEvent?: (e: React.MouseEvent<HTMLButtonElement>) => void; // 버튼 클릭 이벤트 타입
 }
 
 export const buttonVariants = cva('py-2 font-semibold', {

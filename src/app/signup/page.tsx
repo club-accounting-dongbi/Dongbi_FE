@@ -5,43 +5,59 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import Link from 'next/link';
+import { signup, SignupData } from '@/src/api/auth/signup';
 
 import Logo from '@/public/logo/logo.svg';
 import LogoWord from '@/public/logo/logo_word.svg';
 import CommonButton from '@/src/components/common/CommonButton';
 import InputArea from './components/InputArea';
 
-interface SignupFormData {
-  clubName: string;
-  email: string;
-  verifyNumber: string;
-  password: string;
-  password2: string;
-}
-
 const SignupStep1 = () => {
   const [isMounted, setIsMounted] = useState<boolean>(false);
+  const [data, setData] = useState<SignupData>({
+    clubname: '',
+    email: '',
+    verifyNumber: '',
+    password: '',
+    password2: '',
+  });
+  const [loading, setLoading] = useState(false);
+  const emailRegEx =
+    /^[A-Za-z0-9]([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/i;
+  const passwordRegEx = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*?_]).{8,20}$/;
+
   const router = useRouter();
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = useForm<SignupFormData>();
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
-  const onSubmit = (data: SignupFormData) => {
-    const { password, password2 } = data;
-
-    if (password !== password2) {
-      alert('Passwords do not match!');
+  const handleSignup = async (
+    e?: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>,
+  ) => {
+    if (e && (e as React.FormEvent<HTMLFormElement>).preventDefault) {
+      (e as React.FormEvent<HTMLFormElement>).preventDefault(); // 폼의 기본 동작(새로고침) 방지
+    }
+    if (
+      !data.email ||
+      emailRegEx.test(data.email) === false ||
+      !data.password ||
+      passwordRegEx.test(data.password) === false ||
+      data.password !== data.password2
+    ) {
+      alert('입력값을 확인해주세요');
       return;
     }
 
-    router.push('/signup/step2');
+    try {
+      setLoading(true);
+      const result = await signup(data);
+      router.push('/login');
+    } catch (err) {
+      console.error('Signup error:', err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (!isMounted) return null;
@@ -56,22 +72,21 @@ const SignupStep1 = () => {
       </div>
 
       <form
-        onSubmit={handleSubmit(onSubmit)}
         className="w-full flex flex-col items-center"
+        onSubmit={handleSignup}
       >
-        <InputArea register={register} errors={errors} />
-        <CommonButton
-          text="회원가입"
-          bgColor="orange"
-          textColor="white"
-          radius="moreRounded"
-          shadowColor="lightShadow"
-          fontSize="sm"
-          additionalClass="w-[331px] h-[45px] mt-[72px]"
-          onClickEvent={handleSubmit(onSubmit)}
-        />
+        <InputArea data={data} setData={setData} />
       </form>
-
+      <CommonButton
+        text="회원가입"
+        bgColor="orange"
+        textColor="white"
+        radius="moreRounded"
+        shadowColor="lightShadow"
+        fontSize="sm"
+        additionalClass="w-[331px] h-[45px] mt-[72px]"
+        onClickEvent={handleSignup}
+      />
       <div className="text-[#767676] text-13 mt-[36px]">
         이미 계정이 있으신가요?
       </div>
