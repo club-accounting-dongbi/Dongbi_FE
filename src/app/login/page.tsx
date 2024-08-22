@@ -1,7 +1,7 @@
 'use client';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
-import { cookies } from 'next/headers';
+// import { cookies } from 'next/headers';
 import Logo from '@/public/logo/logo.svg';
 import LogoWord from '@/public/logo/logo_word.svg';
 import InputText from '@/src/components/common/InputText';
@@ -50,11 +50,7 @@ const Login = () => {
 
     try {
       setLoading(true);
-      const response = await login(data);
-      const { accessToken, refreshToken } = response;
-      setAccessToken(accessToken);
-      setRefreshToken(refreshToken);
-
+      await login(data);
       router.push('/home');
     } catch (err) {
       console.error('Login error:', err);
