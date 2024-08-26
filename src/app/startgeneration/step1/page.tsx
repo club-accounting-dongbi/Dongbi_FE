@@ -18,45 +18,68 @@ const formatDate = (date: Date | string | undefined): string => {
   const year = d.getFullYear();
   const month = (d.getMonth() + 1).toString().padStart(2, '0');
   const day = d.getDate().toString().padStart(2, '0');
-  console.log(`${year}.${month}.${day}`);
   return `${year}.${month}.${day}`;
 };
 
 const StartGeneration = () => {
   const router = useRouter();
-
-  const [generationNumber, setGenerationNumber] = useState<string>('');
+  const [generationNumber, setGenerationNumber] = useState<
+    string | undefined
+  >();
   const [startDate, setStartDate] = useState<string>('');
   const [endDate, setEndDate] = useState<string>('');
 
   const handleGenerationNumberChange = (
     e: React.ChangeEvent<HTMLInputElement>,
   ) => {
-    setGenerationNumber(e.target.value);
+    setGenerationNumber(e.target.value.replace(/[^0-9]/g, ''));
   };
 
   const handleStartDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setStartDate(e.target.value);
+    // 종료일이 유효하지 않은 경우 확인
+    if (endDate && !validateDates(e.target.value, endDate)) {
+      alert('종료일은 시작일 이후여야 합니다.');
+      setEndDate(''); // 유효하지 않은 종료일을 초기화하거나 다른 처리
+    }
   };
 
   const handleEndDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!validateDates(startDate, e.target.value)) {
+      alert('종료일은 시작일 이후여야 합니다.');
+      setEndDate('');
+      return;
+    }
+
     setEndDate(e.target.value);
+  };
+
+  const validateDates = (startDate: string, endDate: string): boolean => {
+    if (!startDate || !endDate) return true;
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    return end > start;
   };
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
     if (!generationNumber) {
       alert('기수 번호를 입력해주세요');
       return;
     }
 
-    if (startDate && endDate && new Date(startDate) > new Date(endDate)) {
-      alert('종료일이 시작일보다 앞설 수는 없습니다');
+    if (!startDate || !endDate) {
+      alert('활동기간을 입력해주세요');
       return;
     }
 
-    router.push('/startgeneration/step2');
+    const queryParams = new URLSearchParams({
+      generationNumber: generationNumber || '',
+      startDate: startDate || '',
+      endDate: endDate || '',
+    });
+
+    router.push(`/startgeneration/step2?${queryParams.toString()}`);
   };
 
   return (
@@ -67,6 +90,7 @@ const StartGeneration = () => {
       <div className="mb-[27px] text-[24px] text-primary mr-auto ml-auto">
         <Image src={LogoWord} width={203} height={26} alt="LogoWord" />
       </div>
+
       <form onSubmit={onSubmit}>
         <div>
           <InputText

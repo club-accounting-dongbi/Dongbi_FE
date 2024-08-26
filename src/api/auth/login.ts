@@ -1,11 +1,11 @@
 import { setAccessToken } from './authService';
 
-export interface LoginData {
+export interface LoginParams {
   email: string;
   password: string;
 }
 
-export const login = async (payload: LoginData) => {
+export const login = async (payload: LoginParams) => {
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/auth/login`,
     {

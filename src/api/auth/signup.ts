@@ -1,4 +1,4 @@
-export interface SignupData {
+export interface SignupParams {
   clubname: string;
   email: string;
   verifyNumber: string;
@@ -6,7 +6,7 @@ export interface SignupData {
   password2: string;
 }
 
-export const signup = async (payload: SignupData) => {
+export const signup = async (payload: SignupParams) => {
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/auth/signup`,
     {
