@@ -1,7 +1,6 @@
 export interface SignupData {
   clubname: string;
   email: string;
-  verifyNumber: string;
   password: string;
   password2: string;
 }
