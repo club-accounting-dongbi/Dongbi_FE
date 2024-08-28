@@ -11,7 +11,6 @@ import Link from 'next/link';
 import CommonButton from '@/src/components/common/CommonButton';
 import { useRouter } from 'next/navigation';
 import { login, LoginData } from '@/src/api/auth/login';
-import { setAccessToken, setRefreshToken } from '@/src/api/auth/authService';
 
 const Login = () => {
   const [isMounted, setIsMounted] = useState<boolean>(false);
