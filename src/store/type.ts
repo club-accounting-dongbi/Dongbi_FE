@@ -1,4 +1,3 @@
-// export interface MyStateType {
-//   id: string;
-//   name: string;
-// }
+export interface MyStateType {
+  clubId?: number;
+}

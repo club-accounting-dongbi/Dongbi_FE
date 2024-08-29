@@ -1,11 +1,14 @@
+import { api } from '../api';
+
 export interface SignupData {
   email: string;
 }
 
 export const postEmail = async (data: SignupData) => {
   try {
-    const response = await fetch('/email/send', {
+    const response = await api('/email/send', {
       method: 'POST',
+      skipTokenCheck: true,
       headers: {
         'Content-Type': 'application/json',
       },
