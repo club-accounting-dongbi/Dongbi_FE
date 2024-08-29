@@ -1,5 +1,6 @@
 import { useStore } from '@/src/store';
 import { setAccessToken } from './authService';
+import { api } from '../api';
 
 export interface LoginData {
   email: string;
@@ -7,17 +8,15 @@ export interface LoginData {
 }
 
 export const login = async (payload: LoginData) => {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/auth/login`,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      credentials: 'include',
-      body: JSON.stringify(payload),
+  const response = await api(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
+    method: 'POST',
+    skipTokenCheck: true,
+    headers: {
+      'Content-Type': 'application/json',
     },
-  );
+    credentials: 'include',
+    body: JSON.stringify(payload),
+  });
 
   if (!response.ok) {
     const errorText = await response.text();

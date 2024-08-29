@@ -1,4 +1,10 @@
 import getCookieValue from '../../utils/cookieUtils'; // 유틸리티 함수 임포트
+import { jwtDecode } from 'jwt-decode';
+import { api } from '../api';
+
+interface DecodedToken {
+  exp: number;
+}
 
 // AccessToken을 로컬스토리지에서 가져오기
 export const getAccessToken = (): string | null => {
@@ -42,15 +48,40 @@ export const removeRefreshTowkn = () => {
   document.cookie = `refreshToken=; path=/; secure; HttpOnly; max-age=0`;
 };
 
+export const saveToken = (token: string) => {
+  const expiresAt = calculateExpiresAt(token);
+  localStorage.setItem('accessToken', token);
+  localStorage.setItem('expiresAt', expiresAt.toString());
+};
+
+const calculateExpiresAt = (token: string) => {
+  try {
+    const decoded = jwtDecode<DecodedToken>(token);
+    return decoded.exp * 1000; // Expiration time in milliseconds
+  } catch (error) {
+    console.error('Failed to decode token:', error);
+    return 0;
+  }
+};
+
+export const isTokenExpired = (): boolean => {
+  const expiresAt = localStorage.getItem('expiresAt');
+  if (!expiresAt) return true; // Token is expired if no expiry info is found
+
+  return Date.now() > parseInt(expiresAt, 10);
+};
+
 export const renewAccessToken = async (): Promise<string | null> => {
   const refreshToken = getRefreshToken();
   if (!refreshToken) {
     throw new Error('Refresh token not found');
   }
-  const response = await fetch(
+  const response = await api(
     `${process.env.NEXT_PUBLIC_API_URL}/auth/refresh`,
     {
       method: 'POST',
+      skipTokenCheck: true,
+
       headers: {
         'Content-Type': 'application/json',
       },
