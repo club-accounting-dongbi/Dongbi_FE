@@ -1,5 +1,5 @@
 import { useStore } from '@/src/store';
-import { setAccessToken } from './authService';
+import { saveToken, setAccessToken } from './authService';
 import { api } from '../api';
 
 export interface LoginParams {
@@ -28,6 +28,6 @@ export const login = async (payload: LoginParams) => {
 
   const accessToken = response.headers.get('Authorization');
   if (accessToken) {
-    setAccessToken(accessToken);
+    saveToken(accessToken);
   }
 };

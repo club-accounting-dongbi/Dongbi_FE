@@ -12,6 +12,7 @@ import IconPerson from '@/src/components/IconComponents/IconPerson';
 import {
   startNewGeneration,
   getGenerationData,
+  getGenerationMemberList,
 } from '@/src/api/generations/createNewGeneration';
 import IconDelete from '@/src/components/IconComponents/IconDelete';
 
@@ -35,6 +36,7 @@ const StartGenerationStep2 = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const newGenerationNumber = searchParams.get('generationNumber');
+  const newGenerationName = searchParams.get('generationName');
   const startDate = searchParams.get('startDate');
   const endDate = searchParams.get('endDate');
   const [clubId, setClubId] = useState<number>(24);
@@ -47,7 +49,9 @@ const StartGenerationStep2 = () => {
   const isNewGeneration = generationNumber === newGenerationNumber;
 
   const [generationList, setGenerationList] = useState<number[] | null>(null);
+  const [generationMemberList, setGenerationMemberList] = useState<string[]>();
   const [loading, setLoading] = useState(false);
+
   const fetchGenerationList = async () => {
     try {
       setLoading(true);
@@ -60,9 +64,32 @@ const StartGenerationStep2 = () => {
     }
   };
 
+  const fetchGenerationMemberList = async () => {
+    try {
+      setLoading(true);
+      const response = await getGenerationMemberList({
+        clubId: clubId,
+        generationNum: generationNumber,
+      });
+      let onlyNameList = response?.data.map((el: string) =>
+        el.replace(/^\d+기\s/, ''),
+      );
+
+      setGenerationMemberList([...onlyNameList]);
+    } catch (err) {
+      console.error('error:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     fetchGenerationList();
   }, [searchParams]);
+
+  useEffect(() => {
+    fetchGenerationMemberList();
+  }, [generationNumber]);
 
   const handleGenerationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setGenerationNumber(e.target.value);
@@ -119,6 +146,7 @@ const StartGenerationStep2 = () => {
   const handleStartNewGeneration = async () => {
     if (
       newGenerationNumber === (undefined || null) ||
+      newGenerationName === (undefined || null) ||
       !clubId ||
       !startDate ||
       !endDate ||
@@ -129,15 +157,23 @@ const StartGenerationStep2 = () => {
     } else {
       try {
         setLoading(true);
+
+        let memberList2 = memberList.map(
+          (el) => `${el?.generationNumber}기 ${el?.name}`,
+        );
+
         const response = await startNewGeneration({
-          name: newGenerationNumber?.toString(),
+          name: newGenerationName,
           generationNum: +newGenerationNumber,
           clubId: clubId,
           startDate: startDate,
           endDate: endDate,
-          memberNames: memberList,
+          memberNames: memberList2,
         });
-        console.log('response', response);
+
+        if (response.name) {
+          router.push('/home');
+        }
       } catch (err) {
         console.error('error:', err);
       } finally {
@@ -170,7 +206,7 @@ const StartGenerationStep2 = () => {
               >
                 {generationList?.map((el, index) => (
                   <option key={index} value={el}>
-                    {el}
+                    {el}기
                   </option>
                 ))}
               </select>
@@ -194,9 +230,11 @@ const StartGenerationStep2 = () => {
                 onChange={(e) => setName(e.target.value)}
                 disabled={isNewGeneration}
               >
-                <option value="">이름 선택</option>
-                <option>1</option>
-                <option>2</option>
+                {generationMemberList?.map((el, index) => (
+                  <option key={'gmember_' + index} value={el}>
+                    {el}
+                  </option>
+                ))}
               </select>
             </div>
             <input

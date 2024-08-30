@@ -26,6 +26,7 @@ const StartGeneration = () => {
   const [generationNumber, setGenerationNumber] = useState<
     string | undefined
   >();
+  const [generationName, setGenerationName] = useState<string | undefined>();
   const [startDate, setStartDate] = useState<string>('');
   const [endDate, setEndDate] = useState<string>('');
 
@@ -33,6 +34,12 @@ const StartGeneration = () => {
     e: React.ChangeEvent<HTMLInputElement>,
   ) => {
     setGenerationNumber(e.target.value.replace(/[^0-9]/g, ''));
+  };
+
+  const handleGenerationNameChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    setGenerationName(e.target.value);
   };
 
   const handleStartDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -67,16 +74,20 @@ const StartGeneration = () => {
       alert('기수 번호를 입력해주세요');
       return;
     }
-
+    if (!generationName) {
+      alert('기수 이름을 입력해주세요');
+      return;
+    }
     if (!startDate || !endDate) {
       alert('활동기간을 입력해주세요');
       return;
     }
 
     const queryParams = new URLSearchParams({
-      generationNumber: generationNumber || '',
-      startDate: startDate || '',
-      endDate: endDate || '',
+      generationNumber: generationNumber,
+      generationName: generationName,
+      startDate: startDate,
+      endDate: endDate,
     });
 
     router.push(`/startgeneration/step2?${queryParams.toString()}`);
@@ -102,6 +113,20 @@ const StartGeneration = () => {
             variant="orange"
             shadow="lg"
             label="기수 번호"
+            icon={
+              <IconUsers className="icon w-[24px] h-[24px] fill-none text-black" />
+            }
+            additionalClass="w-[331px] h-[45px] mt-[13px] text-13 text-custom-gray-4"
+          />
+          <InputText
+            type="text"
+            inputStyle="placeholder-custom-gray-4"
+            id="generatioName"
+            value={generationName}
+            onChange={handleGenerationNameChange}
+            variant="orange"
+            shadow="lg"
+            label="기수 이름"
             icon={
               <IconUsers className="icon w-[24px] h-[24px] fill-none text-black" />
             }
