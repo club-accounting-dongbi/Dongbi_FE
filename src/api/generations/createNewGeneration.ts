@@ -1,5 +1,6 @@
 import { useStore } from '@/src/store';
 import { getAccessToken } from '../auth/authService';
+import { api } from '../api';
 
 export interface getGenerationDataParams {
   clubId: number;
@@ -7,10 +8,11 @@ export interface getGenerationDataParams {
 
 export const getGenerationData = async (payload: getGenerationDataParams) => {
   const token = getAccessToken();
-  const response = await fetch(
+  const response = await api(
     `${process.env.NEXT_PUBLIC_API_URL}/generations/num/${payload?.clubId}`,
     {
       method: 'GET',
+      skipTokenCheck: false,
       headers: {
         'Content-Type': 'application/json',
         Authorization: `${token}`,
@@ -38,10 +40,11 @@ export const getGenerationMemberList = async (
   payload: getGenerationMemberListParams,
 ) => {
   const token = getAccessToken();
-  const response = await fetch(
+  const response = await api(
     `${process.env.NEXT_PUBLIC_API_URL}/generations/members/${payload?.clubId}/${payload?.generationNum}`,
     {
       method: 'GET',
+      skipTokenCheck: false,
       headers: {
         'Content-Type': 'application/json',
         Authorization: `${token}`,
@@ -70,17 +73,15 @@ export interface startNewGenerationParams {
 }
 
 export const startNewGeneration = async (payload: startNewGenerationParams) => {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/generations`,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      credentials: 'include',
-      body: JSON.stringify(payload),
+  const response = await api(`${process.env.NEXT_PUBLIC_API_URL}/generations`, {
+    method: 'POST',
+    skipTokenCheck: false,
+    headers: {
+      'Content-Type': 'application/json',
     },
-  );
+    credentials: 'include',
+    body: JSON.stringify(payload),
+  });
 
   if (!response.ok) {
     const errorText = await response.text();
