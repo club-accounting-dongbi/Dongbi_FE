@@ -5,8 +5,6 @@ import { StoreState } from './type';
 export const useStore = create<StoreState>((set) => ({
   clubId: undefined, // 초기 상태 설정
   setClubId: (clubId) => set({ clubId }), // 클럽 ID 업데이트
-  clubGeneration: undefined,
-  setClubGeneration: (clubGeneration) => set({ clubGeneration }),
   memberList: undefined,
   setMemberList: (memberList) => set({ memberList }),
   startDate: undefined,

@@ -88,12 +88,11 @@ export const startNewGeneration = async (payload: startNewGenerationParams) => {
     throw new Error(`Error: ${response.status} ${errorText}`);
   }
   const data = await response.json();
-  const { setClubGeneration, setMemberList, setStartDate, setEndDate } =
-    useStore.getState();
-  setClubGeneration(payload.generationNum);
+  const { setMemberList, setStartDate, setEndDate } = useStore.getState();
   setMemberList(data?.members.map((el: any) => el.name));
   setStartDate(data?.startDate);
   setEndDate(data?.endDate);
+  localStorage.setItem('generationNumber', payload?.generationNum.toString());
 
   return data;
 };

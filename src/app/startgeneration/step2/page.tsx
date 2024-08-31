@@ -88,7 +88,14 @@ const StartGenerationStep2 = () => {
   }, [searchParams]);
 
   useEffect(() => {
-    fetchGenerationMemberList();
+    if (
+      generationNumber &&
+      generationNumber !== newGenerationNumber &&
+      generationList &&
+      generationList.length > 0
+    ) {
+      fetchGenerationMemberList();
+    }
   }, [generationNumber]);
 
   const handleGenerationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -170,9 +177,11 @@ const StartGenerationStep2 = () => {
           endDate: endDate,
           memberNames: memberList2,
         });
-
         if (response.name) {
+          alert('새 기수가 만들어졌습니다. 새 기수 홈 화면으로 이동합니다');
           router.push('/home');
+        } else {
+          alert('새 기수가 제대로 만들어지지 않았습니다. 다시 시도해주세요.');
         }
       } catch (err) {
         console.error('error:', err);
@@ -204,11 +213,12 @@ const StartGenerationStep2 = () => {
                 value={generationNumber}
                 onChange={handleGenerationChange}
               >
-                {generationList?.map((el, index) => (
-                  <option key={index} value={el}>
-                    {el}기
-                  </option>
-                ))}
+                {generationList &&
+                  generationList?.map((el, index) => (
+                    <option key={index} value={el}>
+                      {el}기
+                    </option>
+                  ))}
               </select>
             </div>
             <div
@@ -230,11 +240,12 @@ const StartGenerationStep2 = () => {
                 onChange={(e) => setName(e.target.value)}
                 disabled={isNewGeneration}
               >
-                {generationMemberList?.map((el, index) => (
-                  <option key={'gmember_' + index} value={el}>
-                    {el}
-                  </option>
-                ))}
+                {generationMemberList &&
+                  generationMemberList?.map((el, index) => (
+                    <option key={'gmember_' + index} value={el}>
+                      {el}
+                    </option>
+                  ))}
               </select>
             </div>
             <input
