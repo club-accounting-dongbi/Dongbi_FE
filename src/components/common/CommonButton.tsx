@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { ButtonHTMLAttributes, DetailedHTMLProps } from 'react';
 import { cva } from 'class-variance-authority';
 import cn from '@/src/utils/cn';
 
 interface CommonButtonProps {
+  buttonType?: 'button' | 'submit' | 'reset' | undefined;
   text: string;
   bgColor: 'orange' | 'white';
   textColor: 'black' | 'white' | null | undefined;
@@ -50,6 +51,7 @@ export const buttonVariants = cva('py-2 font-semibold', {
 });
 
 const CommonButton = ({
+  buttonType,
   text,
   bgColor,
   textColor,
@@ -62,7 +64,7 @@ const CommonButton = ({
 }: CommonButtonProps) => {
   return (
     <button
-      type="button"
+      type={buttonType !== undefined ? buttonType : 'button'}
       onClick={onClickEvent}
       className={cn(
         buttonVariants({
