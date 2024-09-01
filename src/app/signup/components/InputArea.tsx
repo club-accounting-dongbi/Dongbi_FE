@@ -10,12 +10,33 @@ import { SignupData } from '@/src/api/auth/signup';
 interface InputAreaProps {
   data: SignupData;
   setData: React.Dispatch<React.SetStateAction<SignupData>>;
+  verifyNumberInput: string | undefined;
+  setVerifyNumberInput: React.Dispatch<
+    React.SetStateAction<string | undefined>
+  >;
+  handleEmailSend: () => Promise<void>;
+  handleEmailCheck: () => Promise<void>;
+  emailInputDisable: boolean;
+  setEmailInputDisable: React.Dispatch<React.SetStateAction<boolean>>;
+  verifyNumberInputDisable: boolean;
+  setVerifyNumberInputDisable: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const EmailInputRow = 'relative w-[331px] h-[58px]';
 const VerifyButton =
-  'absolute right-[10px] top-[12px] mt-[13px] text-13 text-custom-gray-3 z-50';
-const InputArea = ({ data, setData }: InputAreaProps) => {
+  'absolute right-[10px] top-[12px] mt-[13px] text-13 text-custom-gray-3 z-50 cursor-pointer';
+const InputArea = ({
+  data,
+  setData,
+  verifyNumberInput,
+  setVerifyNumberInput,
+  handleEmailSend,
+  handleEmailCheck,
+  emailInputDisable,
+  setEmailInputDisable,
+  verifyNumberInputDisable,
+  setVerifyNumberInputDisable,
+}: InputAreaProps) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setData((prev) => ({ ...prev, [name]: value }));
@@ -41,31 +62,41 @@ const InputArea = ({ data, setData }: InputAreaProps) => {
           type="text"
           id="email"
           name="email" // name 속성 추가
-          variant="orange"
+          variant={`${emailInputDisable === true ? 'default' : 'orange'}`}
           shadow="lg"
           label="이메일"
+          disable={emailInputDisable}
           icon={
             <IconEmail className="icon w-[24px] h-[24px] fill-none text-custom-gray-5 group-hover:text-black" />
           }
-          additionalClass="w-[331px] h-[45px] mt-[13px] flex gap-2"
+          inputStyle={` ${emailInputDisable === true ? 'bg-custom-gray-6' : ''}`}
+          additionalClass={`w-[331px] h-[45px] mt-[13px] flex gap-2 ${emailInputDisable === true ? 'border-gray !bg-custom-gray-6' : ''}`}
           onChange={handleChange}
         />
-        <button className={VerifyButton}>인증</button>
+        <div className={VerifyButton} onClick={handleEmailSend}>
+          인증
+        </div>
       </div>
-      <InputText
-        type="text"
-        id="verifyNumber"
-        name="verifyNumber" // name 속성 추가
-        variant="orange"
-        shadow="lg"
-        label="인증번호"
-        icon={
-          <IconEmail className="icon w-[24px] h-[24px] fill-none text-custom-gray-5 group-hover:text-black" />
-        }
-        additionalClass="w-[331px] h-[45px] mt-[13px] flex gap-2"
-        onChange={handleChange}
-      />
-
+      <div className={EmailInputRow}>
+        <InputText
+          type="text"
+          id="verifyNumber"
+          name="verifyNumber" // name 속성 추가
+          variant={`${emailInputDisable === true ? 'default' : 'orange'}`}
+          shadow="lg"
+          label="인증번호"
+          disable={verifyNumberInputDisable}
+          icon={
+            <IconEmail className="icon w-[24px] h-[24px] fill-none text-custom-gray-5 group-hover:text-black" />
+          }
+          inputStyle={` ${verifyNumberInputDisable === true ? 'bg-custom-gray-6' : ''}`}
+          additionalClass={`w-[331px] h-[45px] mt-[13px] flex gap-2 ${verifyNumberInputDisable === true ? 'border-gray !bg-custom-gray-6' : ''}`}
+          onChange={(e) => setVerifyNumberInput(e?.target?.value)}
+        />
+        <div className={VerifyButton} onClick={handleEmailCheck}>
+          인증번호 확인
+        </div>
+      </div>
       <InputText
         type="password"
         id="password"
