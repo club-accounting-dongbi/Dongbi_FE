@@ -3,7 +3,7 @@ import { getAccessToken } from '../auth/authService';
 import { api } from '../api';
 
 export interface getGenerationDataParams {
-  clubId: number;
+  clubId: string | null;
 }
 
 export const getGenerationData = async (payload: getGenerationDataParams) => {
@@ -32,7 +32,7 @@ export const getGenerationData = async (payload: getGenerationDataParams) => {
 };
 
 export interface getGenerationMemberListParams {
-  clubId: number;
+  clubId: string | null;
   generationNum: string;
 }
 
@@ -66,7 +66,7 @@ export const getGenerationMemberList = async (
 export interface startNewGenerationParams {
   name: string;
   generationNum: number;
-  clubId: number;
+  clubId: string | null;
   startDate: string;
   endDate: string;
   memberNames: string[];

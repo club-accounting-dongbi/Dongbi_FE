@@ -39,18 +39,18 @@ const StartGenerationStep2 = () => {
   const newGenerationName = searchParams.get('generationName');
   const startDate = searchParams.get('startDate');
   const endDate = searchParams.get('endDate');
-  const [clubId, setClubId] = useState<number>(24);
+  const clubId = localStorage.getItem('clubId');
+
   const [name, setName] = useState<string>('');
   const [newName, setNewName] = useState<string>('');
   const [memberList, setMemberList] = useState<Member[]>([]);
   const [generationNumber, setGenerationNumber] = useState<string>(
     newGenerationNumber ? newGenerationNumber : '',
   );
-  const isNewGeneration = generationNumber === newGenerationNumber;
-
   const [generationList, setGenerationList] = useState<number[] | null>(null);
   const [generationMemberList, setGenerationMemberList] = useState<string[]>();
   const [loading, setLoading] = useState(false);
+  const isNewGeneration = generationNumber === newGenerationNumber;
 
   const fetchGenerationList = async () => {
     try {
