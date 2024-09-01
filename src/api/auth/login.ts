@@ -1,5 +1,4 @@
-import { useStore } from '@/src/store';
-import { saveToken, setAccessToken } from './authService';
+import { saveToken } from './authService';
 import { api } from '../api';
 
 export interface LoginParams {
@@ -23,8 +22,7 @@ export const login = async (payload: LoginParams) => {
     throw new Error(`Error: ${response.status} ${errorText}`);
   }
   const responseData = await response.json();
-  const { setClubId } = useStore.getState();
-  setClubId(responseData.clubId);
+  localStorage.setItem('clubId', responseData.clubId);
 
   const accessToken = response.headers.get('Authorization');
   if (accessToken) {
