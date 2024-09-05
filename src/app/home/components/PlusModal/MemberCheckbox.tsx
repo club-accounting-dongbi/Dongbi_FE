@@ -21,6 +21,7 @@ const MemberCheckbox: React.FC<MemberCheckboxProps> = ({
   return (
     <div className={MemberCheckboxContainer}>
       <Checkbox
+        isSquare={true}
         isDisabled={isDisabled}
         isChecked={isChecked}
         onChange={onChangeHandler}
